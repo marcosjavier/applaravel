@@ -1,25 +1,20 @@
-@extends('layout.plantillaBaseDependencia');
+@extends('adminlte::page')
 
-@section('contenido')
-<a href="/funcionarios/create" class="btn btn-secondary">NUEVO DEPENDENCIA</a>
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">ID</th>
-			<th scope="col">Descripción</th>
-			
-		</tr>
-	</thead>
-	<tbody>
-		@foreach ($dependencias as $dependencia )
-		<tr>
-			<td> {{ $dependencia->id }}</td>
-			<td> {{ $dependencia->descripcion }}</td>
-			<td> {{ $dependencia->unidadRegional->descripcion}}</td>
+@section('title', 'Dashboard')
 
-		</tr>	
-		@endforeach
-		
-	</tbody>
-</table>
-@endsection
+@section('content_header')
+    <h1>Lista de Dependencias</h1>
+@stop
+
+@section('content')
+    <p>Welcome to this beautiful admin panel.</p>
+@stop
+
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+@stop
+
+@section('js')
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+@stop

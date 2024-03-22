@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,9 +16,13 @@ use Illuminate\Support\Facades\Route;
 /*Route::get('/', function () {
     return view('welcome');
 });*/
-Route::get('/', function () {
+/*Route::get('/', function () {
+    return view('dashboard.index');
+});*/
+Route::get("/", [DashboardController::class, "totalFuncionarios"]);
+/*Route::get('/', function () {
     return view('vistaUno');
-});
+});*/
 Route::resource('funcionarios', 'App\Http\Controllers\FuncionarioController');
 Route::resource('dependencias', 'App\Http\Controllers\DependenciaController');
 /*
