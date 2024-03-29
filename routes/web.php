@@ -20,6 +20,7 @@ use App\Http\Controllers\DashboardController;
     return view('dashboard.index');
 });*/
 Route::get("/", [DashboardController::class, "totalFuncionarios"]);
+Route::get("/capital", [DashboardController::class, "totalesCapital"]);
 /*Route::get('/', function () {
     return view('vistaUno');
 });*/
