@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Funcionario;
+use DataTables;
 
 class FuncionarioController extends Controller
 {
@@ -12,10 +13,83 @@ class FuncionarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $funcionarios = Funcionario::all();
-        return view('funcionario.index')->with('funcionarios', $funcionarios);
+        if ($request->ajax()) {
+            /**$funcionarios = DB::table('funcionarios')
+                ->join('jerarquias', 'funcionarios.jerarquia_id', '=', 'jerarquias.id')
+                ->join('dependencias', 'funcionarios.dependencia_id', '=', 'dependencias.id')
+                ->select(['funcionarios.id','apellidos','nombres','dni','credencial','sexo','domicilio',
+                            'jerarquias.descripcion AS jerarquia','dependencias.descripcion AS dependencia']);**/
+            $funcionarios = DB::select(
+            "SELECT funcionarios.id,apellidos,nombres,dni,credencial,sexo,domicilio,j.descripcion AS jerarquia,d.descripcion as dependencia
+             FROM funcionarios
+                JOIN jerarquias AS j ON funcionarios.jerarquia_id = j.id
+                JOIN dependencias AS d ON funcionarios.dependencia_id = d.id;");
+            
+            /**$funcionarios = Funcionario::query("SELECT funcionarios.id,apellidos,nombres,dni,credencial,sexo,domicilio,j.descripcion AS jerarquia,d.descripcion as dependencia FROM `funcionarios`
+            JOIN jerarquias AS j ON funcionarios.jerarquia_id = j.id
+            JOIN dependencias AS d ON funcionarios.dependencia_id = d.id;");**/
+                return DataTables::of($funcionarios)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($funcionario) {                 
+                        $showBtn =  '<button ' .
+                                        ' class="btn btn-outline-info" ' .
+                                        ' onclick="showProject(' . $funcionario->id . ')">Show' .
+                                    '</button> '; 
+                        $editBtn =  '<button ' .
+                                        ' class="btn btn-outline-success" ' .
+                                        ' onclick="editProject(' . $funcionario->id . ')">Edit' .
+                                    '</button> '; 
+                        $deleteBtn =  '<button ' .
+                                        ' class="btn btn-outline-danger" ' .
+                                        ' onclick="destroyProject(' . $funcionario->id . ')">Delete' .
+                                    '</button> ';
+        
+                        return $showBtn . $editBtn . $deleteBtn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }else
+        {
+            $funcionarios = Funcionario::all();
+            return view('funcionario.index')->with('funcionarios', $funcionarios);
+        }
+    }
+
+    public function getFuncionarios(Request $request)
+    {
+        
+        if ($request->ajax()) {
+            $funcionarios = DB::select("SELECT funcionarios.id,apellidos,nombres,dni,credencial,sexo,domicilio,j.descripcion AS jerarquia,d.descripcion as dependencia FROM funcionarios
+            JOIN jerarquias AS j ON funcionarios.jerarquia_id = j.id
+            JOIN dependencias AS d ON funcionarios.dependencia_id = d.id;");
+            /**$funcionarios = Funcionario::query("SELECT funcionarios.id,apellidos,nombres,dni,credencial,sexo,domicilio,j.descripcion AS jerarquia,d.descripcion as dependencia FROM `funcionarios`
+            JOIN jerarquias AS j ON funcionarios.jerarquia_id = j.id
+            JOIN dependencias AS d ON funcionarios.dependencia_id = d.id;");*/
+                return DataTables::of($funcionarios)
+                    ->addColumn('action', function ($funcionario) {                 
+                        $showBtn =  '<button ' .
+                                        ' class="btn btn-outline-info" ' .
+                                        ' onclick="showProject(' . $funcionario->id . ')">Show' .
+                                    '</button> '; 
+                        $editBtn =  '<button ' .
+                                        ' class="btn btn-outline-success" ' .
+                                        ' onclick="editProject(' . $funcionario->id . ')">Edit' .
+                                    '</button> '; 
+                        $deleteBtn =  '<button ' .
+                                        ' class="btn btn-outline-danger" ' .
+                                        ' onclick="destroyProject(' . $funcionario->id . ')">Delete' .
+                                    '</button> ';
+        
+                        return $showBtn . $editBtn . $deleteBtn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+
+        #return view('funcionario.getFuncionarios');
+        
     }
 
     /**

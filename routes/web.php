@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FuncionarioController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +22,11 @@ use App\Http\Controllers\DashboardController;
 });*/
 Route::get("/", [DashboardController::class, "totalFuncionarios"]);
 Route::get("/capital", [DashboardController::class, "totalesCapital"]);
+#Route::get("funcionarios/getFuncionarios", [FuncionarioController::class, "getFuncionarios"]);
+Route::get('/funcionarios/getFuncionarios', function () {
+    return view('funcionario.getFuncionarios');
+});
+#Route::get("/funcionarios/getFuncionarios", [FuncionarioController::class, "getFuncionarios"]);
 /*Route::get('/', function () {
     return view('vistaUno');
 });*/

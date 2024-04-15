@@ -10,6 +10,6 @@ class Jerarquia extends Model
     use HasFactory;
 
     public function funcionarios(){
-        return $this->hasMany(Funcionario::class,'id');
+        return $this->hasMany(Funcionario::class);
     }
 }
